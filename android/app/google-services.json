@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "183270133006",
+    "project_id": "to-buy-list-67b8a",
+    "storage_bucket": "to-buy-list-67b8a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:183270133006:android:647fe59384ed1427b79b5f",
+        "android_client_info": {
+          "package_name": "com.example.to_buy_list"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCoE8b7NoZwrg56Ylb8sZ-1wp_QVhTJISU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

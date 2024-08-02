@@ -17,12 +17,11 @@ class ToBuyList {
     required this.items,
   });
 
-  // Tạo đối tượng ToBuyList từ tài liệu Firestore
   factory ToBuyList.fromDocument(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
     return ToBuyList(
       listId: data['uid'] ?? '',
-      name: data['name'] ?? '',
+      name: data['listName'] ?? '',
       ownerId: data['ownerId'] ?? '',
       expirationDate: data['expirationDate'] as Timestamp,
       sharedWith: (data['sharedWith'] as List<dynamic>?)
@@ -36,11 +35,10 @@ class ToBuyList {
     );
   }
 
-  // Chuyển đổi đối tượng ToBuyList thành Map để lưu vào Firestore
   Map<String, dynamic> toMap() {
     return {
       'uid': listId,
-      'name': name,
+      'listName': name,
       'ownerId': ownerId,
       'expirationDate': expirationDate,
       'sharedWith': sharedWith.map((item) => item.toMap()).toList(),
@@ -58,7 +56,6 @@ class SharedWith {
     required this.read,
   });
 
-  // Tạo đối tượng SharedWith từ Map
   factory SharedWith.fromMap(Map<String, dynamic> map) {
     return SharedWith(
       uidUser: map['uidUser'] ?? '',
@@ -66,7 +63,6 @@ class SharedWith {
     );
   }
 
-  // Chuyển đổi đối tượng SharedWith thành Map
   Map<String, dynamic> toMap() {
     return {
       'uidUser': uidUser,
@@ -86,7 +82,6 @@ class Item {
     this.boughtBy,
   });
 
-  // Tạo đối tượng Item từ Map
   factory Item.fromMap(Map<String, dynamic> map) {
     return Item(
       itemName: map['itemName'] ?? '',
@@ -95,12 +90,23 @@ class Item {
     );
   }
 
-  // Chuyển đổi đối tượng Item thành Map
   Map<String, dynamic> toMap() {
     return {
       'itemName': itemName,
       'isBought': isBought,
       'boughtBy': boughtBy,
     };
+  }
+
+  Item copyWith({
+    String? itemName,
+    bool? isBought,
+    String? boughtBy,
+  }) {
+    return Item(
+      itemName: itemName ?? this.itemName,
+      isBought: isBought ?? this.isBought,
+      boughtBy: boughtBy ?? this.boughtBy,
+    );
   }
 }

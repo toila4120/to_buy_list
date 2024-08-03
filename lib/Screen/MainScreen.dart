@@ -20,6 +20,7 @@ class _MainScreenState extends State<MainScreen> {
   DateTime? _selectedDate;
   late BuyListServices _buyListServices;
   List<ToBuyList> _toBuyList = [];
+  String _luuY = '';
 
   @override
   void initState() {
@@ -46,7 +47,9 @@ class _MainScreenState extends State<MainScreen> {
   Future<void> _createToBuyList(String userId) async {
     final listName = _nameListController.text;
     if (listName.isEmpty || _selectedDate == null) {
-      showSnackBar(context, 'Vui lòng nhập tên danh sách và chọn ngày hết hạn');
+      setState(() {
+        _luuY = 'Vui lòng nhập tên danh sách và chọn ngày hết hạn';
+      });
       return;
     }
 
@@ -70,6 +73,7 @@ class _MainScreenState extends State<MainScreen> {
         _itemKeys.clear();
         _selectedDate = null;
         _fetchToBuyList();
+        _luuY = '';
       });
       Navigator.of(context).pop();
     } catch (e) {
@@ -112,6 +116,18 @@ class _MainScreenState extends State<MainScreen> {
                             .toList(),
                       ),
                       const SizedBox(height: 16),
+                      if (_luuY.isNotEmpty)
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            'Lưu ý: $_luuY',
+                            style: TextStyle(
+                              color: Colors.red,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                      const SizedBox(height: 16),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
@@ -128,6 +144,7 @@ class _MainScreenState extends State<MainScreen> {
                               if (date != null) {
                                 setState(() {
                                   _selectedDate = date;
+                                  _luuY = ''; // Clear error message
                                 });
                               }
                             },
@@ -158,6 +175,11 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
+  void callback1() {
+    initState();
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<UserProvider>(context).user;
@@ -173,29 +195,42 @@ class _MainScreenState extends State<MainScreen> {
           child: Column(
             children: [
               SizedBox(height: 16),
-              ListView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: _toBuyList.length,
-                itemBuilder: (context, index) {
-                  final list = _toBuyList[index];
-                  return ListTile(
-                    title: Text(list.name),
-                    subtitle:
-                        Text('Hạn sử dụng: ${list.expirationDate.toDate()}'),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => Detaillist(
-                            buyList: list,
-                          ),
-                        ),
-                      );
-                    },
-                  );
-                },
-              ),
+              _toBuyList.isEmpty
+                  ? const Center(
+                      child: Text(
+                          'Bạn chưa có danh sách mua nào, hãy thêm bên dưới'),
+                    )
+                  : ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: _toBuyList.length,
+                      itemBuilder: (context, index) {
+                        var list = _toBuyList[index];
+                        return ListTile(
+                          title: Text(list.name),
+                          subtitle: Text(
+                              'Hạn sử dụng: ${list.expirationDate.toDate()}'),
+                          onTap: () {
+                            list.items.forEach(
+                              (element) {
+                                print(element.itemName +
+                                    ' ' +
+                                    element.isBought.toString());
+                              },
+                            );
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Detaillist(
+                                  buyList: list,
+                                  callback: callback1,
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      },
+                    ),
             ],
           ),
         ),

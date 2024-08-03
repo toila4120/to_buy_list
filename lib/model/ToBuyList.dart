@@ -17,12 +17,30 @@ class ToBuyList {
     required this.items,
   });
 
+  ToBuyList copyWith({
+    String? listId,
+    String? name,
+    String? ownerId,
+    Timestamp? expirationDate,
+    List<SharedWith>? sharedWith,
+    List<Item>? items,
+  }) {
+    return ToBuyList(
+      listId: listId ?? this.listId,
+      name: name ?? this.name,
+      ownerId: ownerId ?? this.ownerId,
+      expirationDate: expirationDate ?? this.expirationDate,
+      sharedWith: sharedWith ?? this.sharedWith,
+      items: items ?? this.items,
+    );
+  }
+
   factory ToBuyList.fromDocument(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
     return ToBuyList(
-      listId: data['uid'] ?? '',
+      listId: data['listId'] ?? '',
       name: data['listName'] ?? '',
-      ownerId: data['ownerId'] ?? '',
+      ownerId: data['userId'] ?? '',
       expirationDate: data['expirationDate'] as Timestamp,
       sharedWith: (data['sharedWith'] as List<dynamic>?)
               ?.map((item) => SharedWith.fromMap(item as Map<String, dynamic>))
@@ -37,9 +55,9 @@ class ToBuyList {
 
   Map<String, dynamic> toMap() {
     return {
-      'uid': listId,
+      'listId': listId,
       'listName': name,
-      'ownerId': ownerId,
+      'userId': ownerId,
       'expirationDate': expirationDate,
       'sharedWith': sharedWith.map((item) => item.toMap()).toList(),
       'items': items.map((item) => item.toMap()).toList(),
@@ -49,7 +67,7 @@ class ToBuyList {
 
 class SharedWith {
   final String uidUser;
-  final bool read;
+  bool read;
 
   SharedWith({
     required this.uidUser,
@@ -72,9 +90,9 @@ class SharedWith {
 }
 
 class Item {
-  final String itemName;
-  final bool isBought;
-  final String? boughtBy;
+  String itemName;
+  bool isBought;
+  String? boughtBy;
 
   Item({
     required this.itemName,

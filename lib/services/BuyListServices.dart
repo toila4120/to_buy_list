@@ -40,34 +40,18 @@ class BuyListServices {
     }
   }
 
-  Future<List<ToBuyList>> getToBuyList({required String myId}) async {
-    List<ToBuyList> toBuyList = [];
-    try {
-      final allBuyList = await _firestore.collection('to_buy_lists').get();
-
-      print("Owner Query Result: ${allBuyList.docs.length} documents found.");
-
-      final allDocsSnapshot = await _firestore.collection('to_buy_lists').get();
-
-      List<ToBuyList> toBuyList1 = [];
-      toBuyList1 = allDocsSnapshot.docs
+  Stream<List<ToBuyList>> getToBuyListStream({required String myId}) {
+    return _firestore
+        .collection('to_buy_lists')
+        .snapshots()
+        .map((querySnapshot) {
+      return querySnapshot.docs
           .map((doc) => ToBuyList.fromDocument(doc))
-          .toList();
-      for (var list in toBuyList1) {
-        if (list.ownerId == myId) {
-          toBuyList.add(list);
-        } else {
-          for (var list1 in list.sharedWith) {
-            if (list1.uidUser == myId) {
-              toBuyList.add(list);
-            }
-          }
-        }
-      }
-    } catch (e) {
-      print("Error fetching documents: $e");
-    }
-    return toBuyList;
+          .where((list) {
+        return list.ownerId == myId ||
+            list.sharedWith.any((user) => user.uidUser == myId);
+      }).toList();
+    });
   }
 
   Future<void> updateSharedWith(String listId, String uidUser) async {

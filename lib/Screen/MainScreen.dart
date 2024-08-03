@@ -19,22 +19,17 @@ class _MainScreenState extends State<MainScreen> {
   final List<GlobalKey<_NewItemState>> _itemKeys = [];
   DateTime? _selectedDate;
   late BuyListServices _buyListServices;
-  List<ToBuyList> _toBuyList = [];
   String _luuY = '';
 
   @override
   void initState() {
     super.initState();
     _buyListServices = BuyListServices();
-    _fetchToBuyList();
   }
 
-  Future<void> _fetchToBuyList() async {
+  Future<Stream<List<ToBuyList>>> _fetchToBuyList() async {
     final userId = Provider.of<UserProvider>(context, listen: false).user!.uid;
-    final lists = await _buyListServices.getToBuyList(myId: userId);
-    setState(() {
-      _toBuyList = lists;
-    });
+    return await _buyListServices.getToBuyListStream(myId: userId);
   }
 
   void _addNewItem(StateSetter updateState) {
@@ -72,7 +67,6 @@ class _MainScreenState extends State<MainScreen> {
         _nameListController.clear();
         _itemKeys.clear();
         _selectedDate = null;
-        _fetchToBuyList();
         _luuY = '';
       });
       Navigator.of(context).pop();
@@ -144,7 +138,7 @@ class _MainScreenState extends State<MainScreen> {
                               if (date != null) {
                                 setState(() {
                                   _selectedDate = date;
-                                  _luuY = ''; // Clear error message
+                                  _luuY = '';
                                 });
                               }
                             },
@@ -175,14 +169,20 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
-  void callback1() {
-    initState();
-    setState(() {});
+  bool checkUpdate(ToBuyList toBuyList) {
+    final user = Provider.of<UserProvider>(context).user;
+    for (var list in toBuyList.sharedWith) {
+      if (list.uidUser == user!.uid && list.read) {
+        return true;
+      }
+    }
+    return false;
   }
 
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<UserProvider>(context).user;
+
     return SafeArea(
       child: Scaffold(
         floatingActionButton: FloatingActionButton(
@@ -191,39 +191,45 @@ class _MainScreenState extends State<MainScreen> {
           },
           child: const Icon(Icons.add),
         ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              SizedBox(height: 16),
-              _toBuyList.isEmpty
-                  ? const Center(
-                      child: Text(
-                          'Bạn chưa có danh sách mua nào, hãy thêm bên dưới'),
-                    )
-                  : ListView.builder(
+        body: StreamBuilder<List<ToBuyList>>(
+          stream: _buyListServices.getToBuyListStream(myId: user!.uid),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return const Center(
+                child: Text('Bạn chưa có danh sách mua nào, hãy thêm bên dưới'),
+              );
+            } else {
+              final toBuyList = snapshot.data!;
+              return SingleChildScrollView(
+                child: Column(
+                  children: [
+                    SizedBox(height: 16),
+                    ListView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
-                      itemCount: _toBuyList.length,
+                      itemCount: toBuyList.length,
                       itemBuilder: (context, index) {
-                        var list = _toBuyList[index];
+                        var list = toBuyList[index];
                         return ListTile(
                           title: Text(list.name),
-                          subtitle: Text(
-                              'Hạn sử dụng: ${list.expirationDate.toDate()}'),
+                          subtitle:
+                              Text('Hạn: ${list.expirationDate.toDate()}'),
+                          trailing: checkUpdate(list)
+                              ? null
+                              : Icon(Icons.circle, color: Colors.red, size: 10),
                           onTap: () {
-                            list.items.forEach(
-                              (element) {
-                                print(element.itemName +
-                                    ' ' +
-                                    element.isBought.toString());
-                              },
-                            );
                             Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => Detaillist(
                                   buyList: list,
-                                  callback: callback1,
+                                  callback: () {
+                                    setState(() {});
+                                  },
                                 ),
                               ),
                             );
@@ -231,8 +237,11 @@ class _MainScreenState extends State<MainScreen> {
                         );
                       },
                     ),
-            ],
-          ),
+                  ],
+                ),
+              );
+            }
+          },
         ),
       ),
     );

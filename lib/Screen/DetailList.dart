@@ -26,12 +26,6 @@ class _DetaillistState extends State<Detaillist> {
     super.initState();
     _updateRead();
     _editableList = widget.buyList;
-    _editableList.items.forEach(
-      (element) {
-        print(element.itemName + ' ' + element.isBought.toString());
-      },
-    );
-
     _loadFriendsList();
   }
 
@@ -90,6 +84,10 @@ class _DetaillistState extends State<Detaillist> {
     );
   }
 
+  bool isUserInSharedWith(String userId, ToBuyList toBuyList) {
+    return toBuyList.sharedWith.any((shared) => shared.uidUser == userId);
+  }
+
   Future<void> _showFriendsDialog() async {
     showDialog<void>(
       context: context,
@@ -106,15 +104,24 @@ class _DetaillistState extends State<Detaillist> {
                 return ListTile(
                   title: Text(friend.nickname),
                   subtitle: Text('Email: ${friend.email}'),
-                  onTap: () {
-                    BuyListServices()
-                        .updateSharedWith(_editableList.listId, friend.uid);
-                    SharedWith addWith =
-                        SharedWith(read: false, uidUser: friend.uid);
-                    _editableList.sharedWith.add(addWith);
-                    Navigator.pop(context);
-                    showSnackBar(
-                        context, 'Đã thêm ${friend.nickname} vào danh sách');
+                  onTap: () async {
+                    bool ktra = isUserInSharedWith(friend.uid, _editableList);
+                    if (ktra) {
+                      Navigator.pop(context);
+                      showSnackBar(
+                          context, '${friend.nickname} đã có trong danh sách');
+                    } else {
+                      await BuyListServices()
+                          .updateSharedWith(_editableList.listId, friend.uid);
+                      SharedWith addWith =
+                          SharedWith(read: false, uidUser: friend.uid);
+                      setState(() {
+                        _editableList.sharedWith.add(addWith);
+                      });
+                      Navigator.pop(context);
+                      showSnackBar(
+                          context, 'Đã thêm ${friend.nickname} vào danh sách');
+                    }
                   },
                 );
               },
@@ -156,7 +163,7 @@ class _DetaillistState extends State<Detaillist> {
                 Navigator.pop(context);
                 widget.callback?.call();
               },
-              icon: Icon(Icons.back_hand)),
+              icon: Icon(Icons.arrow_back)),
           title: Text(
             widget.buyList.name,
             style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
@@ -188,11 +195,18 @@ class _DetaillistState extends State<Detaillist> {
                       trailing: Checkbox(
                         value: item.isBought,
                         onChanged: (bool? value) {
-                          setState(() {
-                            _editableList.items[index].boughtBy =
-                                user!.nickname;
-                            _editableList.items[index].isBought = value!;
-                          });
+                          if (value!) {
+                            setState(() {
+                              _editableList.items[index].boughtBy =
+                                  user!.nickname;
+                              _editableList.items[index].isBought = value;
+                            });
+                          } else {
+                            setState(() {
+                              _editableList.items[index].boughtBy = null;
+                              _editableList.items[index].isBought = value;
+                            });
+                          }
                         },
                       ),
                     );
@@ -219,6 +233,7 @@ class _DetaillistState extends State<Detaillist> {
                   IconButton(
                     onPressed: () {
                       _saveChanges();
+                      // Navigator.pop(context);
                     },
                     icon: Icon(Icons.save),
                   ),

@@ -28,7 +28,7 @@ class _LoginscreenState extends State<Loginscreen> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => HomeScreen(),
+          builder: (context) => const HomeScreen(),
         ),
       );
     } else {
@@ -46,21 +46,21 @@ class _LoginscreenState extends State<Loginscreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
+                const Text(
                   "To \n  Buy \n   List",
                   style: TextStyle(
                       fontSize: 26,
                       fontWeight: FontWeight.bold,
                       color: Color.fromARGB(255, 245, 84, 3)),
                 ),
-                SizedBox(height: 40),
-                Text(
+                const SizedBox(height: 40),
+                const Text(
                   'Sign In',
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 FTextField(
-                  label: Row(
+                  label: const Row(
                     children: [
                       Icon(Icons.alternate_email_outlined),
                       SizedBox(width: 8),
@@ -75,9 +75,9 @@ class _LoginscreenState extends State<Loginscreen> {
                       : 'Phiền nhập lại mật khẩu',
                   controller: _emailController,
                 ),
-                SizedBox(height: 30),
+                const SizedBox(height: 30),
                 FTextField.password(
-                  label: Row(
+                  label: const Row(
                     children: [
                       Icon(Icons.lock_outline),
                       SizedBox(width: 8),
@@ -98,29 +98,30 @@ class _LoginscreenState extends State<Loginscreen> {
                         });
                       },
                       icon: checked
-                          ? Icon(Icons.visibility)
-                          : Icon(Icons.visibility_off)),
+                          ? const Icon(Icons.visibility)
+                          : const Icon(Icons.visibility_off)),
                   obscureText: checked,
                 ),
-                SizedBox(height: 40),
+                const SizedBox(height: 40),
                 FButton(
                   onPress: () {
                     loginUser();
                   },
-                  label: Text('Login'),
+                  label: const Text('Login'),
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 Center(
                   child: TextButton(
                     onPressed: () {
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => SignUpScreen(),
+                          builder: (context) => const SignUpScreen(),
                         ),
                       );
                     },
-                    child: Text("Nếu bạn chưa có tài khoản đăng ký tại đây!"),
+                    child: const Text(
+                        "Nếu bạn chưa có tài khoản đăng ký tại đây!"),
                   ),
                 ),
               ],

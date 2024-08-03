@@ -53,17 +53,17 @@ class _DetaillistState extends State<Detaillist> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Thêm mục mới'),
+          title: const Text('Thêm mục mới'),
           content: TextField(
             controller: _itemNameController,
-            decoration: InputDecoration(hintText: 'Tên mục'),
+            decoration: const InputDecoration(hintText: 'Tên mục'),
           ),
           actions: <Widget>[
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: Text('Hủy'),
+              child: const Text('Hủy'),
             ),
             TextButton(
               onPressed: () {
@@ -76,7 +76,7 @@ class _DetaillistState extends State<Detaillist> {
                 }
                 Navigator.pop(context);
               },
-              child: Text('Thêm'),
+              child: const Text('Thêm'),
             ),
           ],
         );
@@ -93,7 +93,7 @@ class _DetaillistState extends State<Detaillist> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Chọn bạn để chia sẻ'),
+          title: const Text('Chọn bạn để chia sẻ'),
           content: SizedBox(
             height: 300,
             width: double.maxFinite,
@@ -132,7 +132,7 @@ class _DetaillistState extends State<Detaillist> {
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: Text('Đóng'),
+              child: const Text('Đóng'),
             ),
           ],
         );
@@ -163,10 +163,10 @@ class _DetaillistState extends State<Detaillist> {
                 Navigator.pop(context);
                 widget.callback?.call();
               },
-              icon: Icon(Icons.arrow_back)),
+              icon: const Icon(Icons.arrow_back)),
           title: Text(
             widget.buyList.name,
-            style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+            style: const TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
           ),
           centerTitle: true,
         ),
@@ -212,7 +212,7 @@ class _DetaillistState extends State<Detaillist> {
                     );
                   },
                 ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -220,22 +220,22 @@ class _DetaillistState extends State<Detaillist> {
                     onPressed: () {
                       _showFriendsDialog();
                     },
-                    icon: Icon(Icons.group_add),
+                    icon: const Icon(Icons.group_add),
                   ),
-                  SizedBox(width: 8),
+                  const SizedBox(width: 8),
                   IconButton(
                     onPressed: () {
                       _showAddItemDialog();
                     },
-                    icon: Icon(Icons.add_task_outlined),
+                    icon: const Icon(Icons.add_task_outlined),
                   ),
-                  SizedBox(width: 8),
+                  const SizedBox(width: 8),
                   IconButton(
                     onPressed: () {
                       _saveChanges();
                       // Navigator.pop(context);
                     },
-                    icon: Icon(Icons.save),
+                    icon: const Icon(Icons.save),
                   ),
                 ],
               ),

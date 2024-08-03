@@ -27,10 +27,10 @@ class _MainScreenState extends State<MainScreen> {
     _buyListServices = BuyListServices();
   }
 
-  Future<Stream<List<ToBuyList>>> _fetchToBuyList() async {
-    final userId = Provider.of<UserProvider>(context, listen: false).user!.uid;
-    return await _buyListServices.getToBuyListStream(myId: userId);
-  }
+  // Future<Stream<List<ToBuyList>>> _fetchToBuyList() async {
+  //   final userId = Provider.of<UserProvider>(context, listen: false).user!.uid;
+  //   return await _buyListServices.getToBuyListStream(myId: userId);
+  // }
 
   void _addNewItem(StateSetter updateState) {
     final key = GlobalKey<_NewItemState>();
@@ -115,7 +115,7 @@ class _MainScreenState extends State<MainScreen> {
                           alignment: Alignment.centerLeft,
                           child: Text(
                             'Lưu ý: $_luuY',
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Colors.red,
                               fontSize: 12,
                             ),
@@ -144,14 +144,14 @@ class _MainScreenState extends State<MainScreen> {
                             },
                             icon: const Icon(Icons.calendar_month_outlined),
                           ),
-                          SizedBox(width: 8),
+                          const SizedBox(width: 8),
                           IconButton(
                             onPressed: () {
                               _addNewItem(setState);
                             },
                             icon: const Icon(Icons.add_task),
                           ),
-                          SizedBox(width: 8),
+                          const SizedBox(width: 8),
                           IconButton(
                             icon: const Icon(Icons.save),
                             onPressed: () => _createToBuyList(userId),
@@ -207,7 +207,7 @@ class _MainScreenState extends State<MainScreen> {
               return SingleChildScrollView(
                 child: Column(
                   children: [
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                     ListView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
@@ -220,7 +220,8 @@ class _MainScreenState extends State<MainScreen> {
                               Text('Hạn: ${list.expirationDate.toDate()}'),
                           trailing: checkUpdate(list)
                               ? null
-                              : Icon(Icons.circle, color: Colors.red, size: 10),
+                              : const Icon(Icons.circle,
+                                  color: Colors.red, size: 10),
                           onTap: () {
                             Navigator.push(
                               context,

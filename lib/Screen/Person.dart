@@ -27,17 +27,17 @@ class _PersionState extends State<Persion> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text('Tên: ${user?.nickname}'),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               Text('Email: ${user?.email}'),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               TextButton(
-                child: Text('LogOut'),
+                child: const Text('LogOut'),
                 onPressed: () {
                   LogOut();
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => Loginscreen(),
+                      builder: (context) => const Loginscreen(),
                     ),
                   );
                 },

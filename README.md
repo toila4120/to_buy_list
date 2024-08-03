@@ -1,16 +1,8 @@
 # to_buy_list
 
-A new Flutter project.
+Ứng dụng tạo danh sách mua sắm.
+Ứng dụng cho phép kết bạn chia sẻ danh sách mua sắm
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+![Màn hình đăng nhập](https://drive.google.com/file/d/13O6pVDmyV_nagY-bCzJQzab766gu8qPU/view?usp=drive_link)
+![Màn hình đăng ký](https://drive.google.com/file/d/13CzlTPgmQLc7ufjgNrdtMXZP5jM1VHlF/view?usp=drive_link)
+![Màn hình chính](https://drive.google.com/file/d/13aJz5uCktkWxxaEu7igzyM-E5IXJa-xJ/view?usp=sharing)
